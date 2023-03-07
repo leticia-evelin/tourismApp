@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">LOGIN App</string>
+    <string name="title">Login</string>
+    <string name="description">Please sign in to continue.</string>
+    <string name="email_label">E-mail</string>
+    <string name="password_label">Password</string>
+    <string name="button_sign">SIGN IN</string>
+    <string name="question_account">Don’t have an account?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="title_sign">Sign Up</string>
+    <string name="description_new_account">Create a new account</string>
+    <string name="username_label">Username</string>
+    <string name="phone_label">Phone</string>
+    <string name="email2_label">E-mail</string>
+    <string name="password2_label">Password</string>
+    <string name="checkbox">Over 18?</string>
+    <string name="button_create">CREATE ACCOUNT</string>
+    <string name="question_sign_in">Already have an account?</string>
+    <string name="sign_in">Sign in</string>
+</resources>
