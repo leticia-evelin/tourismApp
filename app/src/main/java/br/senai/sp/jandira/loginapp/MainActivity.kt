@@ -167,7 +167,7 @@ fun LoginScreen(){
             Text(
                 text = stringResource(id = R.string.signup),
                 modifier = Modifier.clickable {
-                  val intent = Intent(context, SignUpctivity::class.java)
+                  val intent = Intent(context, SignUpActivity::class.java)
                    context.startActivity(intent)
                 },
                 fontSize = 14.sp,
