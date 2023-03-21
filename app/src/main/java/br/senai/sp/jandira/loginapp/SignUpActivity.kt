@@ -5,11 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -22,7 +20,6 @@ import br.senai.sp.jandira.loginapp.ui.theme.LOGINAppTheme
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LOGINAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -55,6 +52,7 @@ fun SignUpScreen() {
                 shape = RoundedCornerShape(bottomStart = 16.dp),
                 backgroundColor = Color(207, 6, 240)
                 ) {
+
             }
 
         } // final row
@@ -62,7 +60,8 @@ fun SignUpScreen() {
         // Inicio da Column login
         Column(modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = stringResource(id = R.string.title_sign),
                 fontSize = 48.sp,
@@ -76,6 +75,24 @@ fun SignUpScreen() {
             )
         } // Fim da column login
 
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.End
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = " " , onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+                label =
+                {
+                    Text(text = stringResource(id = R.string.username_label))
+                }
+            )
+        }
 
     } //final column principal
 }
@@ -84,6 +101,6 @@ fun SignUpScreen() {
 @Composable
 fun DefaultPreview2() {
     LOGINAppTheme {
-       SignUpActivity()
+       SignUpScreen()
     }
 }
