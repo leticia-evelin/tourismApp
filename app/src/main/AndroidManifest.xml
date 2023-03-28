@@ -12,12 +12,12 @@
         android:theme="@style/Theme.LOGINApp"
         tools:targetApi="31">
         <activity
-            android:name=".SignUpctivity"
+            android:name=".gui.SignUpActivity"
             android:exported="false"
             android:label="@string/title_activity_sign_upctivity"
             android:theme="@style/Theme.LOGINApp" />
         <activity
-            android:name=".MainActivity"
+            android:name=".gui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.LOGINApp">
