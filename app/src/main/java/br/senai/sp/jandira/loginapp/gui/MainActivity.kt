@@ -1,4 +1,4 @@
-package br.senai.sp.jandira.loginapp
+package br.senai.sp.jandira.loginapp.gui
 
 import android.content.Context
 import android.content.Intent
@@ -21,6 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.senai.sp.jandira.loginapp.R
+import br.senai.sp.jandira.loginapp.components.BottomShape
+import br.senai.sp.jandira.loginapp.components.TopShape
+import br.senai.sp.jandira.loginapp.components.TopShape
 import br.senai.sp.jandira.loginapp.ui.theme.LOGINAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -55,14 +59,7 @@ fun LoginScreen(){
         // Inicio da Row da forma
         Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End) {
-            Card(modifier = Modifier
-                .width(120.dp)
-                .height(40.dp),
-                shape = RoundedCornerShape(bottomStart = 16.dp),
-            backgroundColor = Color(207, 6, 240)
-            ) {
-
-            }
+            TopShape() // fun topform para forma no canto superior
         } //Fim da row da forma
 
         // Inicio da Column login
@@ -106,7 +103,12 @@ fun LoginScreen(){
                         ),
                         tint = Color(207, 1, 240)
                     )
-                }
+                },
+                colors = TextFieldDefaults
+                    .outlinedTextFieldColors(
+                        focusedBorderColor = Color(207, 1, 240),
+                        unfocusedBorderColor = Color(207, 1, 240),
+                    )
             )
             OutlinedTextField(
                 value = "",
@@ -177,14 +179,7 @@ fun LoginScreen(){
 
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start) {
-            Card(modifier = Modifier
-                .width(120.dp)
-                .height(40.dp),
-                shape = RoundedCornerShape(topEnd = 16.dp),
-                backgroundColor = Color(207, 6, 240)
-            ) {
-
-            }
+          BottomShape()
         }
 
     } // Fim da column principal
