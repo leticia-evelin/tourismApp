@@ -1,6 +1,7 @@
 package br.senai.sp.jandira.loginapp.gui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -28,11 +29,34 @@ import androidx.compose.ui.unit.sp
 import br.senai.sp.jandira.loginapp.R
 import br.senai.sp.jandira.loginapp.components.BottomShape
 import br.senai.sp.jandira.loginapp.components.TopShape
+import br.senai.sp.jandira.loginapp.model.User
+import br.senai.sp.jandira.loginapp.repository.UserRepository
 import br.senai.sp.jandira.loginapp.ui.theme.LOGINAppTheme
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //criei um usuario
+        val user = User(
+            userName = "Maria da Silva",
+            email = "maria@terra.com.br",
+            password = "123456",
+            phone = "(11)99999-9999",
+            isOver18 = true
+        )
+        //criei um repositorio
+        val userRep = UserRepository(this)
+        // salvei os dados = o usuario
+        //variavel id vai receber retorno do save
+        var id = userRep.save(user)
+
+        Toast.makeText(
+            this,
+            "$id",
+            Toast.LENGTH_SHORT
+        ).show()
+
         setContent {
             LOGINAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -117,7 +141,8 @@ fun SignUpScreen() {
         ) {
 
             Column(
-                modifier = Modifier.height(300.dp)
+                modifier = Modifier
+                    .height(300.dp)
                     .verticalScroll(rememberScrollState())
             ) {
                 //------------------
@@ -252,13 +277,13 @@ fun SignUpScreen() {
             horizontalArrangement = Arrangement.End) {
 
             Text(
-                text = stringResource(id = R.string.question_account),
+                text = stringResource(id = R.string.question_sign_in),
                 fontSize = 14.sp,
                 color = Color(160, 156, 156)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = stringResource(id = R.string.signup),
+                text = stringResource(id = R.string.signin),
                 modifier = Modifier.clickable {
                    // val intent = Intent(context, SignUpActivity::class.java)
                    // context.startActivity(intent)
