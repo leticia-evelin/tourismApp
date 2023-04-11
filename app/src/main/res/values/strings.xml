@@ -20,4 +20,7 @@
     <string name="question_sign_in">Already have an account?</string>
     <string name="signin">Sign in</string>
     <string name="title_activity_sign_upctivity">SignUpctivity</string>
+    <string name="title_activity_tourism_activity.kt">TourismActivity.kt</string>
+    <string name="title_activity_tourism">TourismActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
 </resources>

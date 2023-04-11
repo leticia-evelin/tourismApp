@@ -1,6 +1,9 @@
 package br.senai.sp.jandira.loginapp.gui
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,19 +13,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,25 +40,6 @@ class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //criei um usuario
-        val user = User(
-            userName = "Maria da Silva",
-            email = "maria@terra.com.br",
-            password = "123456",
-            phone = "(11)99999-9999",
-            isOver18 = true
-        )
-        //criei um repositorio
-        val userRep = UserRepository(this)
-        // salvei os dados = o usuario
-        //variavel id vai receber retorno do save
-        var id = userRep.save(user)
-
-        Toast.makeText(
-            this,
-            "$id",
-            Toast.LENGTH_SHORT
-        ).show()
 
         setContent {
             LOGINAppTheme {
@@ -64,7 +48,7 @@ class SignUpActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                  SignUpScreen()
+                    SignUpScreen()
                 }
             }
         }
@@ -74,53 +58,88 @@ class SignUpActivity : ComponentActivity() {
 @Composable
 fun SignUpScreen() {
 
+    var photoUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+
+
     var scrollState = rememberScrollState()
+
+    var userNameState by remember {
+        mutableStateOf("")
+    }
+    var phoneState by remember {
+        mutableStateOf("")
+    }
+    var emailState by remember {
+        mutableStateOf("")
+    }
+    var passwordState by remember {
+        mutableStateOf("")
+    }
+    var over18State by remember {
+        mutableStateOf(false)
+    }
+
+    //variavel que recebe o contexto
+    val context = LocalContext.current
 
 
     //inicio column principal
-    Column(modifier = Modifier
-        .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
 
         // inicio row
-        Row(modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.End){
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
 
-           TopShape()
+            TopShape()
 
         } // final row
 
         // Inicio da Column login
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = stringResource(id = R.string.title_sign),
+            Text(
+                text = stringResource(id = R.string.title_sign),
                 fontSize = 48.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(206, 1, 240)
             )
 
-            Text(text = stringResource(id = R.string.description_new_account),
-            fontSize = 14.sp,
-            color = Color(160, 156, 156)
+            Text(
+                text = stringResource(id = R.string.description_new_account),
+                fontSize = 14.sp,
+                color = Color(160, 156, 156)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
-            Box(modifier = Modifier.size(100.dp),
-               contentAlignment = Alignment.BottomEnd
-            ){
+            Box(
+                modifier = Modifier.size(100.dp),
+                contentAlignment = Alignment.BottomEnd
+            ) {
                 Card(
                     modifier = Modifier
                         .size(100.dp)
                         .align(Alignment.BottomEnd)
                         .offset(x = (0).dp, y = 0.dp),
-                shape = CircleShape,
-                    backgroundColor = Color(232,232,232,255)
+                    shape = CircleShape,
+                    backgroundColor = Color(232, 232, 232, 255)
                 ) {
-                    Image(painter = painterResource(id = R.drawable.user),
-                        contentDescription = null)
+                    Image(
+                        painter = painterResource(id = R.drawable.user),
+                        contentDescription = null
+                    )
                 }
                 Image(
                     painter = painterResource(
@@ -128,7 +147,7 @@ fun SignUpScreen() {
                     ),
                     contentDescription = null,
                     modifier = Modifier.align(Alignment.BottomEnd)
-                    )
+                )
 
             }
         } // Fim da column login
@@ -148,8 +167,8 @@ fun SignUpScreen() {
                 //------------------
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
-                    value = " " ,
-                    onValueChange = {},
+                    value = userNameState,
+                    onValueChange = { userNameState = it },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     label =
@@ -159,7 +178,8 @@ fun SignUpScreen() {
                     leadingIcon = {
                         Icon(
                             painter = painterResource(
-                                id = R.drawable.person_24),
+                                id = R.drawable.person_24
+                            ),
                             contentDescription = stringResource(
                                 id = R.string.email_description
 
@@ -174,17 +194,19 @@ fun SignUpScreen() {
                         )
                 )
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = phoneState,
+                    onValueChange = { phoneState = it },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     label = {
                         Text(text = stringResource(id = R.string.phone_label))
                     },
                     leadingIcon = {
                         Icon(
                             painter = painterResource(
-                                id = R.drawable.phone_android_24),
+                                id = R.drawable.phone_android_24
+                            ),
                             contentDescription = stringResource(
                                 id = R.string.email_description
 
@@ -194,17 +216,19 @@ fun SignUpScreen() {
                     }
                 )
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = emailState,
+                    onValueChange = { emailState = it },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     label = {
                         Text(text = stringResource(id = R.string.email))
                     },
                     leadingIcon = {
                         Icon(
                             painter = painterResource(
-                                id = R.drawable.email_24),
+                                id = R.drawable.email_24
+                            ),
                             contentDescription = stringResource(
                                 id = R.string.email_description
 
@@ -214,17 +238,19 @@ fun SignUpScreen() {
                     }
                 )
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = passwordState,
+                    onValueChange = { passwordState = it },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
+                    visualTransformation = PasswordVisualTransformation(),
                     label = {
                         Text(text = stringResource(id = R.string.password))
                     },
                     leadingIcon = {
                         Icon(
                             painter = painterResource(
-                                id = R.drawable.lock_24),
+                                id = R.drawable.lock_24
+                            ),
                             contentDescription = stringResource(
                                 id = R.string.email_description
 
@@ -235,10 +261,11 @@ fun SignUpScreen() {
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically) {
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Checkbox(
-                        checked = false,
-                        onCheckedChange = {}
+                        checked = over18State,
+                        onCheckedChange = { over18State = it }
                     )
                     Text(text = stringResource(id = R.string.checkbox))
                 }
@@ -247,15 +274,26 @@ fun SignUpScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 //-----------
-                Button(onClick = { /*TODO*/ },
+                Button(
+                    onClick = {
+                        saveUser(
+                            userNameState,
+                            phoneState,
+                            emailState,
+                            passwordState,
+                            over18State,
+                            context
+                            )
+                    },
                     colors = ButtonDefaults.buttonColors(Color(207, 1, 240)),
                     shape = RoundedCornerShape(16.dp)
                 ) {
-                    Row() {
+                    Row {
 
-                        Text(text = stringResource(id = R.string.button_create).uppercase(),
+                        Text(
+                            text = stringResource(id = R.string.button_create).uppercase(),
                             fontSize = 16.sp,
-                            fontWeight =  FontWeight.ExtraBold,
+                            fontWeight = FontWeight.ExtraBold,
                             color = Color.White
                         )
                         Icon(
@@ -271,10 +309,12 @@ fun SignUpScreen() {
 
         }
 
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-            horizontalArrangement = Arrangement.End) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
 
             Text(
                 text = stringResource(id = R.string.question_sign_in),
@@ -285,15 +325,17 @@ fun SignUpScreen() {
             Text(
                 text = stringResource(id = R.string.signin),
                 modifier = Modifier.clickable {
-                   // val intent = Intent(context, SignUpActivity::class.java)
-                   // context.startActivity(intent)
+                    // val intent = Intent(context, SignUpActivity::class.java)
+                    // context.startActivity(intent)
                 },
                 fontSize = 14.sp,
                 color = Color(247, 6, 246)
             )
         }
-        Row(modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
             BottomShape()
         }
     } //final column principal
@@ -301,10 +343,55 @@ fun SignUpScreen() {
 
 }
 
+fun saveUser(
+    userName: String,
+    phone: String,
+    email: String,
+    password: String,
+    isOver18: Boolean,
+    context: Context
+) {
+    //criando o objeto user
+    val newUser = User(
+        id = 0,
+        userName = userName,
+        phone = phone,
+        email = email,
+        password = password,
+        isOver18 = isOver18
+    )
+    //criando uma instancia do repositorio
+    val userRepository = UserRepository(context)
+
+    //verificar se o usuario ja existe
+    val user = userRepository.finUserByEmail(email)
+    Log.i(
+        "ds2m",
+        "${user.toString()}"
+    )
+    
+    //salvar usuario
+    // se o user for nulo -> criar user
+    if(user == null){
+        val id = userRepository.save(newUser)
+        Toast.makeText(
+            context, "Created User #$id", //concatenacao com o id do user
+            Toast.LENGTH_LONG // mensagem ficar por mais tempo
+        ).show()
+    } else {
+        Toast.makeText(
+            context, "User already exists!",
+            Toast.LENGTH_LONG // mensagem ficar por mais tempo
+        ).show()
+    }
+
+}
+
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DefaultPreview2() {
     LOGINAppTheme {
-       SignUpScreen()
+        SignUpScreen()
     }
 }
