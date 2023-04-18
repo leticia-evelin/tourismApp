@@ -8,7 +8,7 @@ import br.senai.sp.jandira.loginapp.model.User
 
 // Representacao do banco de dados
 
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class], version = 3)
 abstract class TripDb: RoomDatabase() { // herda classe que se conecta ao banco
     //toda vez que eu precisar do banco de dados, chamar TripDb
 
@@ -26,7 +26,7 @@ abstract class TripDb: RoomDatabase() { // herda classe que se conecta ao banco
                         context,
                         TripDb::class.java,
                         "db_trip"
-                    ).allowMainThreadQueries().build() //disparar a construcao do banco, guardar instacia na instaceDb
+                    ).allowMainThreadQueries().fallbackToDestructiveMigration().build() //disparar a construcao do banco, guardar instacia na instaceDb
             }
                 return instanceDb
             }

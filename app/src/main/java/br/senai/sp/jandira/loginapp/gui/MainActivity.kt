@@ -226,8 +226,13 @@ fun authenticate(
             context, "User or password incorret",
             Toast.LENGTH_LONG
         ).show()
-    } else {
-        val intent = Intent(context, HomeActivity::class.java)
+    } else { //adicionar id na intent para proxima activity
+        val intent = Intent(
+            context,
+            HomeActivity::class.java
+        )
+        //malinha
+        intent.putExtra("id", user.id) //pegar valor do id para proxima activity
         context.startActivity(intent)
     }
 }

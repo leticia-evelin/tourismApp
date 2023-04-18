@@ -27,4 +27,8 @@ interface UserDao { //nao posso implementar metodos, o ROOM faz isso
     //encontrar usuario pelo email
     @Query("SELECT * FROM tbl_user WHERE email = :email") //consulta
     fun findUserByEmail(email: String): User
+
+    // id
+//    @Query("SELECT * FROM tbl_user WHERE email = :email") //consulta
+//    fun findUserByEmail(email: String): User
 }

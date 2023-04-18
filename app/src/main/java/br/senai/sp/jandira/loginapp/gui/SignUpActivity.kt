@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,6 +38,8 @@ import br.senai.sp.jandira.loginapp.components.TopShape
 import br.senai.sp.jandira.loginapp.model.User
 import br.senai.sp.jandira.loginapp.repository.UserRepository
 import br.senai.sp.jandira.loginapp.ui.theme.LOGINAppTheme
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,8 +66,19 @@ fun SignUpScreen() {
     var photoUri by remember {
         mutableStateOf<Uri?>(null)
     }
+    //abrir galeria de imagens e permitir selecionar a URI da foto
+    var launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) {
+        photoUri = it
+    }
 
-
+    //variavel que vai guardar a imagem imagem mesmo - utilizando coil biblioteca
+    var painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(LocalContext.current)
+            .data(photoUri)
+            .build()
+    )
 
     var scrollState = rememberScrollState()
 
@@ -137,8 +153,9 @@ fun SignUpScreen() {
                     backgroundColor = Color(232, 232, 232, 255)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.user),
-                        contentDescription = null
+                        painter = if (photoUri == null) painterResource(id = R.drawable.user) else painter,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop
                     )
                 }
                 Image(
@@ -146,7 +163,16 @@ fun SignUpScreen() {
                         id = R.drawable.baseline_add_a_photo_24
                     ),
                     contentDescription = null,
-                    modifier = Modifier.align(Alignment.BottomEnd)
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .clickable { //tornando clicavel
+                            launcher.launch("image/*") //* qualquer tipo de imagem, arquivo
+                            var message = "nada"
+                            Log.i(
+                                "ds2m",
+                                "${photoUri?.path ?: message}"
+                            )
+                        }
                 )
 
             }
@@ -282,6 +308,7 @@ fun SignUpScreen() {
                             emailState,
                             passwordState,
                             over18State,
+                            photoUri?.path ?: " ", // manda path da foto se nao estiver nulo, ao contrario retorna vazio
                             context
                             )
                     },
@@ -349,6 +376,7 @@ fun saveUser(
     email: String,
     password: String,
     isOver18: Boolean,
+    profilePhotoUri: String,
     context: Context
 ) {
     //criando o objeto user
@@ -358,7 +386,9 @@ fun saveUser(
         phone = phone,
         email = email,
         password = password,
-        isOver18 = isOver18
+        isOver18 = isOver18,
+        profilePhoto = profilePhotoUri
+
     )
     //criando uma instancia do repositorio
     val userRepository = UserRepository(context)
