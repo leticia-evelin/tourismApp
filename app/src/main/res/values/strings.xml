@@ -23,4 +23,7 @@
     <string name="title_activity_tourism_activity.kt">TourismActivity.kt</string>
     <string name="title_activity_tourism">TourismActivity</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="categories">Categories</string>
+    <string name="search">Search your destiny</string>
+    <string name="past_trips">Past Trips</string>
 </resources>
